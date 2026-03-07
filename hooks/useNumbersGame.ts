@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { getCorrectRow } from "@/services/getCorrectRow";
 import { GAME_CONFIG, NUMBERS } from "@/constants/numbers-game";
 import { mergeAndSortUniqueNumbers, sortNumbersAscending } from "@/utils/array";
+import { getCorrectRow } from "@/services/numbers-game.service.ts";
 
 export const useNumbersGame = () => {
   const [manualNumbers, setManualNumbers] = useState<number[]>([]);
