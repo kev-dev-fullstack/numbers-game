@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { GAME_CONFIG, NUMBERS } from "@/constants/numbers-game";
 import { mergeAndSortUniqueNumbers, sortNumbersAscending } from "@/utils/array";
-import { getCorrectRow } from "@/services/numbers-game.service.ts";
+import { getCorrectRow } from "@/services/numbers-game.service";
 
 export const useNumbersGame = () => {
   const [manualNumbers, setManualNumbers] = useState<number[]>([]);
