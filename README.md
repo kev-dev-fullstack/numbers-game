@@ -11,6 +11,21 @@ Projektet körs sedan på [http://localhost:3000](http://localhost:3000).
 
 ---
 
+# Nummerspel
+
+Ett enkelt nummerspel med 50 nummer där man ska välja 10 nummer till en egen rad. Spelet genererar sedan en slumpad rad och jämför resultaten.
+
+---
+
+## Tech Stack
+
+- **Next.js**
+- **TypeScript**
+- **React**
+- **Tailwind CSS**
+
+---
+
 ## Mina anteckningar
 
 ### Vad gick bra?
