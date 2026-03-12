@@ -1,43 +1,35 @@
-"use client";
-
 import { useState } from "react";
 import { GAME_CONFIG, NUMBERS } from "@/constants/numbers-game";
-import { mergeAndSortUniqueNumbers, sortNumbersAscending } from "@/utils/array";
+import { shuffle, sortNumbersAscending } from "@/utils/array";
 import { getCorrectRow } from "@/services/numbers-game.service";
 
 export const useNumbersGame = () => {
   const [manualNumbers, setManualNumbers] = useState<number[]>([]);
   const [randomNumbers, setRandomNumbers] = useState<number[]>([]);
   const [correctRow, setCorrectRow] = useState<number[] | null>(null);
-  const [showBricks, setShowBricks] = useState(true);
+  const [showTiles, setShowTiles] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
-  const selectedNumbers = mergeAndSortUniqueNumbers(
-    manualNumbers,
-    randomNumbers,
-  );
-
-  const matchedNumbers = correctRow
-    ? selectedNumbers.filter((number) => correctRow.includes(number))
-    : [];
-
   const toggleNumber = (value: number): void => {
-    if (!showBricks) {
+    if (manualNumbers.includes(value)) {
+      setManualNumbers(manualNumbers.filter((n) => n !== value));
       return;
     }
 
-    if (manualNumbers.includes(value)) {
-      setManualNumbers(manualNumbers.filter((number) => number !== value));
-    } else {
-      if (manualNumbers.length >= GAME_CONFIG.rowSize) {
-        return;
-      }
-      setManualNumbers(sortNumbersAscending([...manualNumbers, value]));
+    if (randomNumbers.includes(value)) {
+      setRandomNumbers(randomNumbers.filter((n) => n !== value));
+      return;
     }
+
+    if (manualNumbers.length + randomNumbers.length >= GAME_CONFIG.rowSize) {
+      return;
+    }
+
+    setManualNumbers(sortNumbersAscending([...manualNumbers, value]));
   };
 
   const randomizeNumbers = (): void => {
-    if (!showBricks || manualNumbers.length >= GAME_CONFIG.rowSize) {
+    if (manualNumbers.length >= GAME_CONFIG.rowSize) {
       return;
     }
 
@@ -47,42 +39,43 @@ export const useNumbersGame = () => {
 
     const countToRandomize = GAME_CONFIG.rowSize - manualNumbers.length;
 
-    const shuffledNumbers = [...remainingNumbers].sort(() => {
-      const randomValue = Math.random() - 0.5;
-      return randomValue;
-    });
+    const shuffledNumbers = shuffle(remainingNumbers);
 
     setRandomNumbers(shuffledNumbers.slice(0, countToRandomize));
   };
 
   const checkNumbers = async (): Promise<void> => {
+    const selectedNumbers = [...manualNumbers, ...randomNumbers].sort(
+      (a, b) => a - b,
+    );
+
     if (selectedNumbers.length !== GAME_CONFIG.rowSize) {
       return;
     }
 
-    setShowBricks(false);
+    setShowTiles(false);
     setIsLoading(true);
 
-    const correctRow = await getCorrectRow();
-    setCorrectRow(correctRow);
-    setIsLoading(false);
+    try {
+      const row = await getCorrectRow();
+      setCorrectRow(row);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const restartGame = () => {
     setManualNumbers([]);
     setRandomNumbers([]);
     setCorrectRow(null);
-    setShowBricks(true);
+    setShowTiles(true);
   };
 
   return {
-    displayedNumbers: NUMBERS,
     manualNumbers,
     randomNumbers,
-    selectedNumbers,
     correctRow,
-    matchedNumbers,
-    showBricks,
+    showTiles,
     isLoading,
     toggleNumber,
     randomizeNumbers,

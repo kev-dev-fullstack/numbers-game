@@ -2,6 +2,10 @@ export const mergeUnique = <T>(first: T[], second: T[]): T[] => {
   return Array.from(new Set([...first, ...second]));
 };
 
+export const sortNumbersAscending = (numbers: number[]): number[] => {
+  return numbers.sort((a, b) => a - b);
+};
+
 export const mergeAndSortUniqueNumbers = (
   first: number[],
   second: number[],
@@ -9,10 +13,7 @@ export const mergeAndSortUniqueNumbers = (
   return sortNumbersAscending(mergeUnique(first, second));
 };
 
-export function sortNumbersAscending(numbers: number[]): number[] {
-  return [...numbers].sort((a, b) => a - b);
-}
-
+//Fisher yates
 export const shuffle = (array: number[]): number[] => {
   const arr = [...array];
   for (let i = arr.length - 1; i > 0; i--) {
