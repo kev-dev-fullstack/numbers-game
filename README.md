@@ -1,5 +1,3 @@
-# Programmeringsuppgift – Svenska Spel – Senior Frontend (Team Nummer)
-
 ## Kom igång
 
 ```bash
